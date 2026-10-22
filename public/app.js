@@ -1,4 +1,4 @@
-const ids = Object.fromEntries(["credits","reputation","queued","failed","processing","completed","dispatchStatus","orders","events","dispatcher","capacity","capacityLevel","launch","dispatcherLogs","workerLogs","logHint","dispatchBar","dispatchPercent","reputationBar","reputationPercent","hideOwned","statsBuy","statsUpgrade","diagnostics"].map(id => [id, document.getElementById(id)]));
+const ids = Object.fromEntries(["credits","reputation","queued","failed","processing","completed","dispatchStatus","orders","events","dispatcher","capacity","capacityLevel","launch","dispatcherLogs","workerLogs","logHint","dispatchBar","dispatchPercent","reputationBar","reputationPercent","hideOwned","statsBuy","statsUpgrade","diagnostics","burst","pause","quests","queueAge"].map(id => [id, document.getElementById(id)]));
 const money = number => Math.floor(number).toLocaleString("ru-RU");
 async function action(path) {
   const response = await fetch(path,{method:"POST"});
@@ -12,9 +12,26 @@ ids.capacity.onclick = () => action("/api/buy/capacity");
 ids.dispatcherLogs.onclick = () => action("/api/buy/dispatcherLogs");
 ids.workerLogs.onclick = () => action("/api/buy/workerLogs");
 ids.statsBuy.onclick = () => action("/api/buy/stats");
+ids.burst.onclick = () => action("/api/burst");
+ids.pause.onclick = () => action("/api/pause");
 ids.hideOwned.onchange = () => refresh();
 function render(state) {
   ids.credits.textContent = money(state.credits);
+  ids.queueAge.textContent = (state.oldestQueueMs / 1000).toFixed(1);
+  ids.burst.disabled = !state.canBurst;
+  ids.burst.textContent = !state.automation ? "Нужен планировщик" : state.canBurst ? "Тест: 12 запросов" : "Через " + Math.ceil(state.burstCooldownMs / 1000) + " с";
+  ids.pause.disabled = !state.automation;
+  ids.pause.textContent = state.dispatchPaused ? "Возобновить" : "Пауза";
+  ids.quests.replaceChildren(...state.quests.map(q => {
+    const el = document.createElement("div");
+    el.className = "entry";
+    const title = document.createElement("span");
+    title.textContent = (q.done ? "✓ " : "○ ") + q.title;
+    const detail = document.createElement("span");
+    detail.textContent = q.detail;
+    el.append(title, detail);
+    return el;
+  }));
   ids.statsBuy.textContent = state.statsUnlocked ? "Установлен" : "25 ¢";
   ids.statsBuy.disabled = state.statsUnlocked || state.credits < 25;
   const hide = ids.hideOwned.checked;
@@ -66,7 +83,7 @@ function render(state) {
     "Без сборщиков системные события скрыты. Установи наблюдаемость, чтобы расследовать ошибки.";
   ids.reputation.textContent = state.reputation.toFixed(1) + "%";
   for (const key of ["queued","failed","processing","completed"]) ids[key].textContent = state.stats[key];
-  ids.dispatchStatus.textContent = state.automation ? "Планировщик включён. Клиентские запросы поступают автоматически." : "Планировщик запросов ещё не куплен.";
+  ids.dispatchStatus.textContent = state.automation ? (state.dispatchPaused ? "Планировщик на паузе: очередь освобождается." : "Планировщик включён. Клиентские запросы поступают автоматически.") : "Планировщик запросов ещё не куплен.";
   ids.dispatcher.textContent = state.automation ? "Куплен" : "50 ¢";
   ids.dispatcher.disabled = state.automation || state.credits < 50;
   ids.capacity.textContent = state.capacity >= 5 ? "Максимум" : money(state.upgrades.capacity.cost) + " ¢";
