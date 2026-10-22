@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rusty Comet</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<main>
+<header><div><p class="eyebrow">RUSTY COMET // EARTH–MOON LOGISTICS</p><h1>Груз должен лететь.</h1><p class="muted">Межпланетная доставка. Сначала вручную. Потом — целая система.</p></div><div class="orb">◌</div></header>
+<section class="stats">
+ <div><span>Кредиты</span><strong id="credits">0</strong></div>
+ <div><span>Репутация</span><strong id="reputation">100%</strong></div>
+ <div><span>В очереди</span><strong id="queued">0</strong></div>
+ <div><span>Ошибки</span><strong id="failed">0</strong></div>
+</section>
+<section class="two">
+ <article><p class="eyebrow">01 / FLIGHT DECK</p><h2>Земля → Луна</h2><p>Одна доставка приносит <b>5 кредитов</b> и требует <b>3 секунды</b> обработки. Заказ может истечь после 12 секунд в очереди.</p>
+ <button id="launch">Запустить доставку <span>↗</span></button><p class="muted" id="dispatchStatus">Автодиспетчер ещё не куплен.</p>
+ <div class="counts"><span>В пути: <b id="processing">0</b></span><span>Доставлено: <b id="completed">0</b></span></div></article>
+ <article><p class="eyebrow">02 / ENGINEERING</p><h2>Модернизация</h2>
+ <div class="upgrade"><div><b>Автодиспетчер</b><p>Новые заказы появляются без нажатий. Работает на сервере.</p></div><button id="dispatcher">50 ¢</button></div>
+ <div class="upgrade"><div><b>Второй канал обработки</b><p>Ещё одна доставка может выполняться параллельно.</p><small id="capacityLevel"></small></div><button id="capacity">40 ¢</button></div>
+ </article>
+</section>
+<section class="two bottom"><article><p class="eyebrow">03 / LIVE TRAFFIC</p><h2>Последние доставки</h2><div id="orders" class="activity"></div></article>
+<article><p class="eyebrow">04 / SYSTEM LOG</p><h2>Реальные события</h2><div id="events" class="activity mono"></div></article></section>
+<footer>V0.1 · Запусти доставки вручную, автоматизируй поток и проверь, как очередь влияет на надёжность.</footer>
+</main><script src="/app.js" defer></script></body></html>
