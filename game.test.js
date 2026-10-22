@@ -56,3 +56,23 @@ test("log collectors unlock only their own event types", () => {
   assert.ok(game.events.some(event => event.type === "transfer_completed"));
   assert.equal(game.credits,5);
 });
+
+test("statistics are gated, reflect outcomes, and survive restart", () => {
+  const start = Date.now();
+  const game = new Game({credits:30});
+  assert.equal(game.view().diagnostics, null);
+  const order = game.launch("manual",start);
+  game.tick(start);
+  game.tick(start+3100);
+  assert.equal(order.status,"completed");
+  assert.equal(game.purchase("stats"),true);
+  const d = game.view().diagnostics;
+  assert.equal(d.sample,1);
+  assert.equal(d.success,1);
+  assert.equal(d.failed,0);
+  assert.equal(d.failureRate,0);
+  assert.equal(d.averageProcessingMs,3100);
+  const restored = new Game(game.snapshot());
+  assert.equal(restored.statsUnlocked,true);
+  assert.equal(restored.view().diagnostics.success,1);
+});
