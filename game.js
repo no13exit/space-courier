@@ -19,6 +19,11 @@ export class Game {
       }
     }
     this.events = [];
+    this.dispatchPaused = saved.dispatchPaused ?? false;
+    this.burstTriggered = saved.burstTriggered ?? false;
+    this.timeoutObserved = saved.timeoutObserved ?? false;
+    this.recovered = saved.recovered ?? false;
+    this.lastBurstAt = saved.lastBurstAt ?? 0;
   }
 
   get queue() { return this.orders.filter(order => order.status === "queued"); }
@@ -46,6 +51,22 @@ export class Game {
     this.orders.push(order);
     this.event("transfer_queued", order, source);
     return order;
+  }
+
+  toggleDispatcher() {
+    if (!this.automation) return false;
+    this.dispatchPaused = !this.dispatchPaused;
+    this.event("dispatcher_toggled", null, this.dispatchPaused ? "paused" : "resumed");
+    return true;
+  }
+
+  burst(now = Date.now()) {
+    if (!this.automation || now - this.lastBurstAt < 30000) return false;
+    this.lastBurstAt = now;
+    this.burstTriggered = true;
+    for (let i = 0; i < 12; i++) this.launch("test", now);
+    this.event("load_test_started", null, "12 test requests");
+    return true;
   }
 
   purchase(item) {
@@ -76,7 +97,7 @@ export class Game {
   tick(now = Date.now()) {
     // A dispatcher creates demand; reputation affects how frequently customers return.
     // Cap catch-up: without a running server, this does not pretend to complete real work.
-    if (this.automation) {
+    if (this.automation && !this.dispatchPaused) {
       const interval = 2200 * (100 / Math.max(20, this.reputation));
       let created = 0;
       while (now - this.lastCreated >= interval && created < 10) {
@@ -106,10 +127,12 @@ export class Game {
       order.startedAt = now;
       this.event("transfer_started", order);
     }
+    if (this.timeoutObserved && this.queue.length === 0 && this.active.length === 0 && this.dispatchPaused) this.recovered = true;
     this.lastStep = now;
   }
 
   fail(order, now, reason) {
+    if (reason === "queue_timeout") this.timeoutObserved = true;
     order.status = "failed";
     order.finishedAt = now;
     this.reputation = Math.max(20, this.reputation - 4);
@@ -119,7 +142,9 @@ export class Game {
   snapshot() {
     return {credits:this.credits, reputation:Math.round(this.reputation*10)/10,
       automation:this.automation, capacity:this.capacity, nextId:this.nextId,
-      lastCreated:this.lastCreated, orders:this.orders, collectors:this.collectors, statsUnlocked:this.statsUnlocked};
+      lastCreated:this.lastCreated, orders:this.orders, collectors:this.collectors, statsUnlocked:this.statsUnlocked,
+      dispatchPaused:this.dispatchPaused, burstTriggered:this.burstTriggered, timeoutObserved:this.timeoutObserved,
+      recovered:this.recovered, lastBurstAt:this.lastBurstAt};
   }
 
   view() {
@@ -132,7 +157,18 @@ export class Game {
     const diagnostics = this.statsUnlocked ? {sample:finished.length, success:successes.length,
       failed:failures, failureRate:finished.length ? Math.round(failures / finished.length * 1000)/10 : 0,
       averageProcessingMs:durations.length ? Math.round(durations.reduce((a,b) => a+b,0)/durations.length) : null} : null;
-    return {...this.snapshot(), diagnostics, now:Date.now(), dispatchInterval:interval, processingMs:3000, timeoutMs:12000, stats:{queued:this.queue.length,processing:this.active.length,
+    const now = Date.now();
+    const oldestQueueMs = this.queue.length ? Math.max(0, now - this.queue[0].createdAt) : 0;
+    const quests = [
+      {title:"Запусти планировщик",done:this.automation,detail:"Автоматизируй поток клиентских запросов."},
+      {title:"Создай перегрузку",done:this.burstTriggered,detail:"Отправь тестовый всплеск из 12 запросов."},
+      {title:"Найди таймаут очереди",done:this.timeoutObserved,detail:"Дождись queue_timeout; проверь длину очереди и возраст старого запроса."},
+      {title:"Восстанови сервис",done:this.recovered,detail:"Приостанови планировщик и дай очереди полностью опустеть."}
+    ];
+    return {...this.snapshot(), diagnostics, quests, oldestQueueMs,
+      canBurst:this.automation && now - this.lastBurstAt >= 30000,
+      burstCooldownMs:Math.max(0,30000-(now-this.lastBurstAt)),
+      now, dispatchInterval:interval, processingMs:3000, timeoutMs:12000, stats:{queued:this.queue.length,processing:this.active.length,
       completed:this.completed.length,failed:this.failed.length}, events:this.events.slice(-15).reverse(),
       upgrades:{dispatcher:{cost:50,owned:this.automation},
         capacity:{cost:this.capacity*40,level:this.capacity,max:5},
