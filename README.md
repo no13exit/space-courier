@@ -1,4 +1,4 @@
-# Rusty Comet — v0.2 playable pilot
+# Rusty Comet — v0.3 playable pilot
 
 A small idle logistics game that runs real Node.js order processing. Manual launches add work to the same queue as the auto dispatcher.
 
@@ -16,6 +16,8 @@ No dependencies or API keys. Runtime game state is saved in `state.json` (gitign
 - Each order takes 3 seconds of wall-clock processing. Orders waiting more than 12 seconds fail.
 - Failures hurt reputation; successful deliveries repair it. Reputation affects the auto-order rate.
 - Progress bars show processing, queue waiting, dispatcher cadence and reputation based on actual timestamps/state.
+- A statistics collector costs 25 credits and unlocks outcomes from the last 50 finished orders: successes, failures, failure rate, and average processing time. This uses actual saved order data, not invented events.
+- A checkbox hides fully purchased upgrades (repeatable capacity stays visible until maxed).
 - The dispatcher collector costs 20 credits; the worker collector costs 30. In-game diagnostic events are recorded and shown only for sources whose collector has been purchased. Server console logs remain available to the developer.
 - Error counts derive from actual processing state. Collected events contain `transferId`.
 
