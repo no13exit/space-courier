@@ -76,3 +76,25 @@ test("statistics are gated, reflect outcomes, and survive restart", () => {
   assert.equal(restored.statsUnlocked,true);
   assert.equal(restored.view().diagnostics.success,1);
 });
+
+test("load-test queue creates timeouts and can recover without losing credits", () => {
+  const start = Date.now();
+  const game = new Game({credits:50});
+  assert.equal(game.purchase("dispatcher"), true);
+  assert.equal(game.burst(start), true);
+  assert.equal(game.burst(start + 1000), false);
+  game.tick(start);
+  assert.ok(game.queue.length > 0);
+  game.tick(start + 12500);
+  assert.ok(game.failed.length > 0);
+  assert.equal(game.timeoutObserved, true);
+  assert.equal(game.toggleDispatcher(), true);
+  game.tick(start + 16000);
+  assert.equal(game.queue.length, 0);
+  assert.equal(game.active.length, 0);
+  assert.equal(game.recovered, true);
+  const restored = new Game(game.snapshot());
+  assert.equal(restored.recovered, true);
+  assert.equal(restored.burstTriggered, true);
+  assert.equal(restored.credits >= 0, true);
+});
