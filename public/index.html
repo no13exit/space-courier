@@ -16,6 +16,7 @@
  <button id="launch">Обработать запрос <span>↗</span></button><p class="muted" id="dispatchStatus">Планировщик запросов ещё не куплен.</p>
  <div class="progress-label"><span>Следующий автоматический запрос</span><span id="dispatchPercent">—</span></div><div class="bar"><div id="dispatchBar"></div></div>
  <div class="progress-label"><span>Доверие клиентов</span><span id="reputationPercent">100%</span></div><div class="bar"><div id="reputationBar"></div></div>
+ <p class="muted">Возраст старейшего запроса в очереди: <b id="queueAge">0.0</b> с</p>
  <div class="counts"><span>В работе: <b id="processing">0</b></span><span>Обработано: <b id="completed">0</b></span></div></article>
  <article><p class="eyebrow">02 / INFRASTRUCTURE</p><h2>Инфраструктура</h2><label class="hide-owned"><input type="checkbox" id="hideOwned"> Скрывать купленные</label>
  <div class="upgrade"><div><b>Автодиспетчер</b><p>Автоматически принимает новые запросы, пока сервис запущен.</p></div><button id="dispatcher">50 ¢</button></div>
@@ -23,9 +24,12 @@
  <div class="upgrade" id="statsUpgrade"><div><b>Базовая аналитика</b><p>Последние 50 обработанных запросов: ошибки и время выполнения.</p></div><button id="statsBuy">25 ¢</button></div>
  <div class="upgrade"><div><b>Логи приёма запросов</b><p>Показывает поступление новых запросов в очередь.</p></div><button id="dispatcherLogs">20 ¢</button></div>
  <div class="upgrade"><div><b>Логи воркера</b><p>Показывает выполнение запросов, завершения и причины сбоев.</p></div><button id="workerLogs">30 ¢</button></div>
+ <div class="upgrade"><div><b>Нагрузочный тест</b><p>12 запросов одновременно. Используй для проверки очередей и таймаутов (раз в 30 секунд).</p></div><button id="burst">Запустить тест</button></div>
+ <div class="upgrade"><div><b>Приостановить планировщик</b><p>Бесплатное восстановление: временно не принимать новые запросы, пока очередь опустеет.</p></div><button id="pause">Пауза</button></div>
  </article>
 </section>
-<section class="two bottom"><article><p class="eyebrow">03 / REQUEST QUEUE</p><h2>Последние запросы</h2><div id="orders" class="activity"></div></article>
-<article><p class="eyebrow">04 / OBSERVABILITY</p><h2>События системы</h2><div id="diagnostics" class="diagnostics"><p class="muted">Купите базовую аналитику, чтобы видеть показатели.</p></div><p class="muted" id="logHint">Сборщики логов не установлены.</p><div id="events" class="activity mono"></div></article></section>
-<footer>V0.4 · Один сервер, растущая очередь и технический долг. Рескин: игровая логика и сохранение без изменений.</footer>
+<section><article class="quest-panel"><p class="eyebrow">03 / QUEST LOG</p><h2>План диагностики: очередь</h2><p class="muted">Задачи засчитываются по состоянию сервиса. Кредиты и улучшения не теряются при ошибках.</p><div id="quests" class="activity"></div></article></section>
+<section class="two bottom"><article><p class="eyebrow">04 / REQUEST QUEUE</p><h2>Последние запросы</h2><div id="orders" class="activity"></div></article>
+<article><p class="eyebrow">05 / OBSERVABILITY</p><h2>События системы</h2><div id="diagnostics" class="diagnostics"><p class="muted">Купите базовую аналитику, чтобы видеть показатели.</p></div><p class="muted" id="logHint">Сборщики логов не установлены.</p><div id="events" class="activity mono"></div></article></section>
+<footer>V0.5 · Первая глава: очередь, тест нагрузки, восстановление и квесты.</footer>
 </main><script src="/app.js" defer></script></body></html>
