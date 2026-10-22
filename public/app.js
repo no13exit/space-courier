@@ -1,4 +1,4 @@
-const ids = Object.fromEntries(["credits","reputation","queued","failed","processing","completed","dispatchStatus","orders","events","dispatcher","capacity","capacityLevel","launch","dispatcherLogs","workerLogs","logHint","dispatchBar","dispatchPercent","reputationBar","reputationPercent"].map(id => [id, document.getElementById(id)]));
+const ids = Object.fromEntries(["credits","reputation","queued","failed","processing","completed","dispatchStatus","orders","events","dispatcher","capacity","capacityLevel","launch","dispatcherLogs","workerLogs","logHint","dispatchBar","dispatchPercent","reputationBar","reputationPercent","hideOwned","statsBuy","statsUpgrade","diagnostics"].map(id => [id, document.getElementById(id)]));
 const money = number => Math.floor(number).toLocaleString("ru-RU");
 async function action(path) {
   const response = await fetch(path,{method:"POST"});
@@ -11,8 +11,45 @@ ids.dispatcher.onclick = () => action("/api/buy/dispatcher");
 ids.capacity.onclick = () => action("/api/buy/capacity");
 ids.dispatcherLogs.onclick = () => action("/api/buy/dispatcherLogs");
 ids.workerLogs.onclick = () => action("/api/buy/workerLogs");
+ids.statsBuy.onclick = () => action("/api/buy/stats");
+ids.hideOwned.onchange = () => refresh();
 function render(state) {
   ids.credits.textContent = money(state.credits);
+  ids.statsBuy.textContent = state.statsUnlocked ? "Установлен" : "25 ¢";
+  ids.statsBuy.disabled = state.statsUnlocked || state.credits < 25;
+  const hide = ids.hideOwned.checked;
+  for (const [id,owned] of [
+    ["dispatcher",state.automation],
+    ["capacity",state.capacity >= 5],
+    ["dispatcherLogs",state.collectors.dispatcher],
+    ["workerLogs",state.collectors.worker],
+    ["statsUpgrade",state.statsUnlocked]
+  ]) {
+    const element = id === "statsUpgrade" ? ids.statsUpgrade : ids[id].closest(".upgrade");
+    element.hidden = hide && owned;
+  }
+  if (state.diagnostics) {
+    const d = state.diagnostics;
+    ids.diagnostics.textContent = "";
+    const values = [
+      ["Выборка", d.sample + " доставок"],
+      ["Успешных", String(d.success)],
+      ["Ошибки", String(d.failed)],
+      ["Доля ошибок", d.failureRate.toFixed(1) + "%"],
+      ["Среднее время", d.averageProcessingMs == null ? "—" : (d.averageProcessingMs / 1000).toFixed(1) + " с"]
+    ];
+    for (const [label,value] of values) {
+      const item = document.createElement("div");
+      item.className = "diagnostic-item";
+      const name = document.createElement("span");
+      const result = document.createElement("b");
+      name.textContent = label;
+      result.textContent = value;
+      item.append(name,result);
+      ids.diagnostics.append(item);
+    }
+  } else ids.diagnostics.textContent = "Статистика недоступна. Установите сборщик статистики.";
+
   const reputation = Math.max(0, Math.min(100, state.reputation));
   ids.reputationBar.style.width = reputation + "%";
   ids.reputationPercent.textContent = reputation.toFixed(1) + "%";
