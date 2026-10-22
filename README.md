@@ -4,7 +4,7 @@ A small idle logistics game that runs real Node.js order processing. Manual laun
 
 ## Run
 
-Requires Node.js 18+. Run `npm start`, then open **http://127.0.0.1:3000**.
+Requires Node.js 18+. Run `npm start`, then open **http://127.0.0.1:3001**.
 
 No dependencies or API keys. Runtime game state is saved in `state.json` (gitignored).
 
