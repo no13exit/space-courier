@@ -32,6 +32,16 @@ const server = http.createServer((req, res) => {
     if (order) save();
     return respond(order ? 200 : 409, order ? game.view() : {error:"Очередь переполнена"});
   }
+  if (req.url === "/api/burst" && req.method === "POST") {
+    const success = game.burst();
+    if (success) { game.tick(); save(); }
+    return respond(success ? 200 : 409, success ? game.view() : {error:"Нужен планировщик или тест ещё на перезарядке"});
+  }
+  if (req.url === "/api/pause" && req.method === "POST") {
+    const success = game.toggleDispatcher();
+    if (success) save();
+    return respond(success ? 200 : 409, success ? game.view() : {error:"Сначала купите планировщик"});
+  }
   if (req.url?.startsWith("/api/buy/") && req.method === "POST") {
     const key = req.url.slice("/api/buy/".length);
     const success = game.purchase(key);
@@ -49,4 +59,4 @@ const server = http.createServer((req, res) => {
 setInterval(() => game.tick(), 250);
 setInterval(save, 5000);
 process.on("SIGINT", () => { save(); process.exit(0); });
-server.listen(port,"127.0.0.1",()=>console.log(`Rusty Comet: http://127.0.0.1:${port}`));
+server.listen(port,"127.0.0.1",()=>console.log(`Tiny Service: http://127.0.0.1:${port}`));
