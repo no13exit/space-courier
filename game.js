@@ -5,6 +5,7 @@ export class Game {
     this.reputation = saved.reputation ?? 100;
     this.automation = saved.automation ?? false;
     this.capacity = saved.capacity ?? 1;
+    this.statsUnlocked = saved.statsUnlocked ?? false;
     this.collectors = saved.collectors ?? {dispatcher:false, worker:false};
     this.orders = saved.orders ?? [];
     this.nextId = saved.nextId ?? 1;
@@ -57,6 +58,10 @@ export class Game {
       if (this.credits < cost || this.capacity >= 5) return false;
       this.credits -= cost;
       this.capacity++;
+    } else if (item === "stats") {
+      if (this.statsUnlocked || this.credits < 25) return false;
+      this.credits -= 25;
+      this.statsUnlocked = true;
     } else if (item === "dispatcherLogs" || item === "workerLogs") {
       const source = item === "dispatcherLogs" ? "dispatcher" : "worker";
       const cost = source === "dispatcher" ? 20 : 30;
@@ -114,15 +119,24 @@ export class Game {
   snapshot() {
     return {credits:this.credits, reputation:Math.round(this.reputation*10)/10,
       automation:this.automation, capacity:this.capacity, nextId:this.nextId,
-      lastCreated:this.lastCreated, orders:this.orders, collectors:this.collectors};
+      lastCreated:this.lastCreated, orders:this.orders, collectors:this.collectors, statsUnlocked:this.statsUnlocked};
   }
 
   view() {
     const interval = 2200 * (100 / Math.max(20, this.reputation));
-    return {...this.snapshot(), now:Date.now(), dispatchInterval:interval, processingMs:3000, timeoutMs:12000, stats:{queued:this.queue.length,processing:this.active.length,
+    const finished = this.orders.filter(order => order.status === "completed" || order.status === "failed").slice(-50);
+    const successes = finished.filter(order => order.status === "completed");
+    const failures = finished.length - successes.length;
+    const durations = successes.filter(order => order.startedAt != null && order.finishedAt != null)
+      .map(order => order.finishedAt - order.startedAt);
+    const diagnostics = this.statsUnlocked ? {sample:finished.length, success:successes.length,
+      failed:failures, failureRate:finished.length ? Math.round(failures / finished.length * 1000)/10 : 0,
+      averageProcessingMs:durations.length ? Math.round(durations.reduce((a,b) => a+b,0)/durations.length) : null} : null;
+    return {...this.snapshot(), diagnostics, now:Date.now(), dispatchInterval:interval, processingMs:3000, timeoutMs:12000, stats:{queued:this.queue.length,processing:this.active.length,
       completed:this.completed.length,failed:this.failed.length}, events:this.events.slice(-15).reverse(),
       upgrades:{dispatcher:{cost:50,owned:this.automation},
         capacity:{cost:this.capacity*40,level:this.capacity,max:5},
+        stats:{cost:25,owned:this.statsUnlocked},
         dispatcherLogs:{cost:20,owned:this.collectors.dispatcher},
         workerLogs:{cost:30,owned:this.collectors.worker}}};
   }
