@@ -40,3 +40,19 @@ test("capacity upgrade requires credits", () => {
   assert.equal(game.credits,0);
   assert.equal(game.purchase("capacity"),false);
 });
+
+test("log collectors unlock only their own event types", () => {
+  const game = new Game({credits:50});
+  const start = Date.now();
+  game.launch("manual",start);
+  assert.equal(game.events.length,0);
+  assert.equal(game.purchase("dispatcherLogs"),true);
+  game.launch("manual",start);
+  assert.ok(game.events.some(event => event.type === "transfer_queued"));
+  game.tick(start);
+  assert.equal(game.events.some(event => event.type === "transfer_started"),false);
+  assert.equal(game.purchase("workerLogs"),true);
+  game.tick(start+3500);
+  assert.ok(game.events.some(event => event.type === "transfer_completed"));
+  assert.equal(game.credits,5);
+});
