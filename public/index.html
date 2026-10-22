@@ -1,31 +1,31 @@
 <!doctype html>
 <html lang="ru">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rusty Comet</title><link rel="stylesheet" href="/style.css"></head>
+<title>Tiny Service — Idle Ops</title><link rel="stylesheet" href="/style.css"></head>
 <body>
 <main>
-<header><div><p class="eyebrow">RUSTY COMET // EARTH–MOON LOGISTICS</p><h1>Груз должен лететь.</h1><p class="muted">Межпланетная доставка. Сначала вручную. Потом — целая система.</p></div><div class="orb">◌</div></header>
+<header><div><p class="eyebrow">TINY SERVICE // YOUR FIRST INTERNET BUSINESS</p><h1>От одного запроса до миллиона.</h1><p class="muted">Построй свой первый цифровой сервис: обрабатывай запросы, автоматизируй работу и развивай инфраструктуру.</p></div><div class="orb" aria-hidden="true"><span class="terminal-orb">&gt;_</span><small>SERVER ONLINE<br>localhost:3001</small></div></header>
 <section class="stats">
- <div><span>Кредиты</span><strong id="credits">0</strong></div>
- <div><span>Репутация</span><strong id="reputation">100%</strong></div>
+ <div><span>Баланс</span><strong id="credits">0</strong></div>
+ <div><span>Доверие клиентов</span><strong id="reputation">100%</strong></div>
  <div><span>В очереди</span><strong id="queued">0</strong></div>
  <div><span>Ошибки</span><strong id="failed">0</strong></div>
 </section>
 <section class="two">
- <article><p class="eyebrow">01 / FLIGHT DECK</p><h2>Земля → Луна</h2><p>Одна доставка приносит <b>5 кредитов</b> и требует <b>3 секунды</b> обработки. Заказ может истечь после 12 секунд в очереди.</p>
- <button id="launch">Запустить доставку <span>↗</span></button><p class="muted" id="dispatchStatus">Автодиспетчер ещё не куплен.</p>
- <div class="progress-label"><span>Следующая автодоставка</span><span id="dispatchPercent">—</span></div><div class="bar"><div id="dispatchBar"></div></div>
- <div class="progress-label"><span>Репутация</span><span id="reputationPercent">100%</span></div><div class="bar"><div id="reputationBar"></div></div>
- <div class="counts"><span>В пути: <b id="processing">0</b></span><span>Доставлено: <b id="completed">0</b></span></div></article>
- <article><p class="eyebrow">02 / ENGINEERING</p><h2>Модернизация</h2><label class="hide-owned"><input type="checkbox" id="hideOwned"> Скрывать купленные</label>
- <div class="upgrade"><div><b>Автодиспетчер</b><p>Новые заказы появляются без нажатий. Работает на сервере.</p></div><button id="dispatcher">50 ¢</button></div>
- <div class="upgrade"><div><b>Второй канал обработки</b><p>Ещё одна доставка может выполняться параллельно.</p><small id="capacityLevel"></small></div><button id="capacity">40 ¢</button></div>
- <div class="upgrade" id="statsUpgrade"><div><b>Сборщик статистики</b><p>Последние 50 завершённых заказов: доля ошибок и среднее время обработки.</p></div><button id="statsBuy">25 ¢</button></div>
- <div class="upgrade"><div><b>Логи диспетчера</b><p>Показывает момент создания каждого заказа.</p></div><button id="dispatcherLogs">20 ¢</button></div>
- <div class="upgrade"><div><b>Логи обработчика</b><p>Показывает старт, завершения и причины ошибок.</p></div><button id="workerLogs">30 ¢</button></div>
+ <article><p class="eyebrow">01 / REQUEST CONSOLE</p><h2>Первый веб-сервис</h2><p>Каждый успешно обработанный запрос приносит <b>5 кредитов</b>. Воркер занят <b>3 секунды</b>; запрос истекает после 12 секунд ожидания в очереди.</p>
+ <button id="launch">Обработать запрос <span>↗</span></button><p class="muted" id="dispatchStatus">Планировщик запросов ещё не куплен.</p>
+ <div class="progress-label"><span>Следующий автоматический запрос</span><span id="dispatchPercent">—</span></div><div class="bar"><div id="dispatchBar"></div></div>
+ <div class="progress-label"><span>Доверие клиентов</span><span id="reputationPercent">100%</span></div><div class="bar"><div id="reputationBar"></div></div>
+ <div class="counts"><span>В работе: <b id="processing">0</b></span><span>Обработано: <b id="completed">0</b></span></div></article>
+ <article><p class="eyebrow">02 / INFRASTRUCTURE</p><h2>Инфраструктура</h2><label class="hide-owned"><input type="checkbox" id="hideOwned"> Скрывать купленные</label>
+ <div class="upgrade"><div><b>Автодиспетчер</b><p>Автоматически принимает новые запросы, пока сервис запущен.</p></div><button id="dispatcher">50 ¢</button></div>
+ <div class="upgrade"><div><b>Дополнительный воркер</b><p>Увеличивает число запросов, обрабатываемых одновременно.</p><small id="capacityLevel"></small></div><button id="capacity">40 ¢</button></div>
+ <div class="upgrade" id="statsUpgrade"><div><b>Базовая аналитика</b><p>Последние 50 обработанных запросов: ошибки и время выполнения.</p></div><button id="statsBuy">25 ¢</button></div>
+ <div class="upgrade"><div><b>Логи приёма запросов</b><p>Показывает поступление новых запросов в очередь.</p></div><button id="dispatcherLogs">20 ¢</button></div>
+ <div class="upgrade"><div><b>Логи воркера</b><p>Показывает выполнение запросов, завершения и причины сбоев.</p></div><button id="workerLogs">30 ¢</button></div>
  </article>
 </section>
-<section class="two bottom"><article><p class="eyebrow">03 / LIVE TRAFFIC</p><h2>Последние доставки</h2><div id="orders" class="activity"></div></article>
-<article><p class="eyebrow">04 / SYSTEM LOG</p><h2>Реальные события</h2><div id="diagnostics" class="diagnostics"><p class="muted">Купите сборщик статистики, чтобы видеть показатели.</p></div><p class="muted" id="logHint">Сборщики логов не установлены.</p><div id="events" class="activity mono"></div></article></section>
-<footer>V0.3 · Запусти доставки вручную, автоматизируй поток и проверь, как очередь влияет на надёжность.</footer>
+<section class="two bottom"><article><p class="eyebrow">03 / REQUEST QUEUE</p><h2>Последние запросы</h2><div id="orders" class="activity"></div></article>
+<article><p class="eyebrow">04 / OBSERVABILITY</p><h2>События системы</h2><div id="diagnostics" class="diagnostics"><p class="muted">Купите базовую аналитику, чтобы видеть показатели.</p></div><p class="muted" id="logHint">Сборщики логов не установлены.</p><div id="events" class="activity mono"></div></article></section>
+<footer>V0.4 · Один сервер, растущая очередь и технический долг. Рескин: игровая логика и сохранение без изменений.</footer>
 </main><script src="/app.js" defer></script></body></html>

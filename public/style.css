@@ -14,3 +14,22 @@
 .diagnostic-item{display:flex;flex-direction:column;padding:9px;background:#1b3035;border-radius:8px;font-size:12px}
 .diagnostic-item span{color:#9cadad}
 .diagnostic-item b{font-size:18px;font-variant-numeric:tabular-nums}
+
+/* Tiny Service reskin: terminal-inspired SaaS operations room */
+:root{color:#e7efe7;background:#0b1416}
+body{background:radial-gradient(ellipse at 90% 0%,#124343 0%,#10262b 31%,#0b1416 78%);min-height:100vh}
+h1{max-width:760px;line-height:1.05}
+header{border-bottom:1px solid #25414b;margin-bottom:20px}
+.eyebrow{color:#7de2b0}
+.stats>div{border-top:2px solid #3a9f85}
+.stats strong{color:#f0f7e8}
+button{background:#86dab2;color:#0b2424}
+button:disabled{background:#33484b}
+.bar>div{background:#6bdfb0}
+.bar>div.queued{background:#6ba8bf}
+.entry span:last-child{color:#7fe0bd}
+.upgrade small{color:#8de0bb}
+.hide-owned input{accent-color:#76dcb4}
+.orb{font-family:ui-monospace,Consolas,monospace;font-size:18px;opacity:1;display:flex;flex-direction:column;align-items:center;gap:14px;min-width:185px;color:#8fe8c7}
+.terminal-orb{border:1px solid #3d7c73;background:#123a3c;border-radius:20px;box-shadow:0 0 45px #1aa78330;padding:26px 36px;font-size:43px;font-weight:700}
+.orb small{letter-spacing:.16em;text-align:center;font-size:10px;line-height:1.7}

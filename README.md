@@ -1,6 +1,6 @@
-# Rusty Comet — v0.3 playable pilot
+# Tiny Service — v0.4 setting experiment
 
-A small idle logistics game that runs real Node.js order processing. Manual launches add work to the same queue as the auto dispatcher.
+A small idle internet-service game that runs real Node.js order processing. Manual request handling adds work to the same queue as the automatic request scheduler.
 
 ## Run
 
@@ -25,4 +25,4 @@ No dependencies or API keys. Runtime game state is saved in `state.json` (gitign
 
 This is a **local gameplay pilot**, not production infrastructure. The browser can close while the Node server continues working. Turning off the server stops processing. Queues and processing are currently in one Node process; persistent snapshots avoid losing finished orders on normal restart but are not a durable job queue.
 
-There is no separate customer demand queue, SLA, database, Grafana, or distributed worker yet. First validate that the manual → automatic → overloaded queue loop is enjoyable and understandable before adding complexity.
+There is no separate customer demand queue, SLA, database, Grafana, or distributed worker yet. This v0.4 changes only presentation and terminology, preserving the underlying mechanics, save file and prices. Test whether a small SaaS setting makes infrastructure upgrades more intuitive.

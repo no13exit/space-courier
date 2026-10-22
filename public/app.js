@@ -32,7 +32,7 @@ function render(state) {
     const d = state.diagnostics;
     ids.diagnostics.textContent = "";
     const values = [
-      ["Выборка", d.sample + " доставок"],
+      ["Выборка", d.sample + " запросов"],
       ["Успешных", String(d.success)],
       ["Ошибки", String(d.failed)],
       ["Доля ошибок", d.failureRate.toFixed(1) + "%"],
@@ -63,15 +63,15 @@ function render(state) {
   }
   ids.logHint.textContent = state.collectors.dispatcher || state.collectors.worker ?
     "Активны: " + [state.collectors.dispatcher ? "диспетчер" : null,state.collectors.worker ? "обработчик" : null].filter(Boolean).join(", ") :
-    "Без сборщиков логи недоступны. Покупай инструменты, чтобы понять причины ошибок.";
+    "Без сборщиков системные события скрыты. Установи наблюдаемость, чтобы расследовать ошибки.";
   ids.reputation.textContent = state.reputation.toFixed(1) + "%";
   for (const key of ["queued","failed","processing","completed"]) ids[key].textContent = state.stats[key];
-  ids.dispatchStatus.textContent = state.automation ? "Автодиспетчер включён. Новые заказы поступают автоматически." : "Автодиспетчер ещё не куплен.";
+  ids.dispatchStatus.textContent = state.automation ? "Планировщик включён. Клиентские запросы поступают автоматически." : "Планировщик запросов ещё не куплен.";
   ids.dispatcher.textContent = state.automation ? "Куплен" : "50 ¢";
   ids.dispatcher.disabled = state.automation || state.credits < 50;
   ids.capacity.textContent = state.capacity >= 5 ? "Максимум" : money(state.upgrades.capacity.cost) + " ¢";
   ids.capacity.disabled = state.capacity >= 5 || state.credits < state.upgrades.capacity.cost;
-  ids.capacityLevel.textContent = "Параллельных доставок: " + state.capacity;
+  ids.capacityLevel.textContent =  "Активных воркеров: " + state.capacity;
   ids.orders.replaceChildren(...state.orders.slice(-12).reverse().map(order => {
     const el = document.createElement("div");
     el.className = "transfer";
@@ -80,7 +80,7 @@ function render(state) {
     const name = document.createElement("span");
     name.textContent = "#" + order.id + " · " + (order.source === "manual" ? "ручной" : "авто");
     const status = document.createElement("span");
-    status.textContent = ({queued:"Ожидает",processing:"В пути",completed:"Доставлен",failed:"Ошибка"}[order.status] || order.status);
+    status.textContent = ({queued:"Ожидает",processing:"Обработка",completed:"Выполнен",failed:"Ошибка"}[order.status] || order.status);
     label.append(name,status);
     const track = document.createElement("div");
     track.className = "bar";
