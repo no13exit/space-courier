@@ -10,7 +10,7 @@ let saved = {};
 try { saved = JSON.parse(fs.readFileSync(savePath, "utf8")); }
 catch (error) { if (error.code !== "ENOENT") throw error; }
 const game = new Game(saved);
-const port = Number(process.env.PORT || 3000);
+const port = Number(process.env.PORT || 3001);
 
 function save() {
   const temporary = savePath + ".tmp";
