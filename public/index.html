@@ -17,14 +17,15 @@
  <div class="progress-label"><span>Следующая автодоставка</span><span id="dispatchPercent">—</span></div><div class="bar"><div id="dispatchBar"></div></div>
  <div class="progress-label"><span>Репутация</span><span id="reputationPercent">100%</span></div><div class="bar"><div id="reputationBar"></div></div>
  <div class="counts"><span>В пути: <b id="processing">0</b></span><span>Доставлено: <b id="completed">0</b></span></div></article>
- <article><p class="eyebrow">02 / ENGINEERING</p><h2>Модернизация</h2>
+ <article><p class="eyebrow">02 / ENGINEERING</p><h2>Модернизация</h2><label class="hide-owned"><input type="checkbox" id="hideOwned"> Скрывать купленные</label>
  <div class="upgrade"><div><b>Автодиспетчер</b><p>Новые заказы появляются без нажатий. Работает на сервере.</p></div><button id="dispatcher">50 ¢</button></div>
  <div class="upgrade"><div><b>Второй канал обработки</b><p>Ещё одна доставка может выполняться параллельно.</p><small id="capacityLevel"></small></div><button id="capacity">40 ¢</button></div>
+ <div class="upgrade" id="statsUpgrade"><div><b>Сборщик статистики</b><p>Последние 50 завершённых заказов: доля ошибок и среднее время обработки.</p></div><button id="statsBuy">25 ¢</button></div>
  <div class="upgrade"><div><b>Логи диспетчера</b><p>Показывает момент создания каждого заказа.</p></div><button id="dispatcherLogs">20 ¢</button></div>
  <div class="upgrade"><div><b>Логи обработчика</b><p>Показывает старт, завершения и причины ошибок.</p></div><button id="workerLogs">30 ¢</button></div>
  </article>
 </section>
 <section class="two bottom"><article><p class="eyebrow">03 / LIVE TRAFFIC</p><h2>Последние доставки</h2><div id="orders" class="activity"></div></article>
-<article><p class="eyebrow">04 / SYSTEM LOG</p><h2>Реальные события</h2><p class="muted" id="logHint">Сборщики логов не установлены.</p><div id="events" class="activity mono"></div></article></section>
-<footer>V0.2 · Запусти доставки вручную, автоматизируй поток и проверь, как очередь влияет на надёжность.</footer>
+<article><p class="eyebrow">04 / SYSTEM LOG</p><h2>Реальные события</h2><div id="diagnostics" class="diagnostics"><p class="muted">Купите сборщик статистики, чтобы видеть показатели.</p></div><p class="muted" id="logHint">Сборщики логов не установлены.</p><div id="events" class="activity mono"></div></article></section>
+<footer>V0.3 · Запусти доставки вручную, автоматизируй поток и проверь, как очередь влияет на надёжность.</footer>
 </main><script src="/app.js" defer></script></body></html>
